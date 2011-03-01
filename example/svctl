@@ -1,0 +1,117 @@
+#! /usr/bin/env ruby
+
+require 'sys/sv/svdir'
+include Sys::Sv
+
+USAGE = <<'__eousage'
+Usage:  svctl [cmd] service_dir [service_dir ...]
+        svctl [-h|--help]
+
+If 'cmd' is 'status', print a summary of the current state of each
+given service directory and its subordinate log directory, if any.
+
+Issue 'cmd' to the given service directories in turn.  Behavior
+varies with the command:
+
+  status ...... summarize status of service and log service, if any
+  up .......... start and, as needed, restart the service
+  down ........ TERM+CONT a running service, do not restart
+  exit ........ "down" a service, TERM its log service, then exit
+  once ........ start but do not restart the service
+
+Other values of 'cmd' instruct the supervisory process to send a
+UNIX signal to its service, if running:
+
+  pause, STOP, continue, CONT, hangup, HUP, alarm, ALRM, interrupt, INT,
+  terminate, TERM, kill, KILL, user1, USR1, user2, USR2
+
+Note that the 'user'/'USR' commands are extensions to the original
+process supervision implementation, and not supported by all supervisors.
+__eousage
+
+def usage_exit(errmsg = nil)
+  outio, rc = [$stdout, 0]
+
+  if errmsg
+    outio = $stderr
+    rc    = 1
+    outio.puts errmsg
+  end
+
+  outio.puts USAGE
+
+  exit(rc)
+end
+
+def formatted_status(sv, name = nil)
+  # sv(1)-inspired status
+  #
+  # For each SvDir argument, show:
+  #   current state:  running, paused ("running" but SIGSTOP'd), or down
+  #   service name:   supplied by caller
+  #   elapsed time:   time since begun running or since stopped
+  #   pid:            if applicable
+  #   typical state:  normally up/down? (only if different than current)
+  #   want up/down?:  if applicable
+  #   
+  name = File.basename(sv.path) unless name
+
+  runstate, elapsed, pid_str, unusual_state = [nil, nil, nil, nil]
+
+  if sv.up?
+    runstate      = sv.paused? ? "paused" : "run"
+    elapsed       = sv.uptime
+    pid_str       = "(pid #{sv.pid})"
+    unusual_state = "normally down" if sv.normally_down?  # Hmm!
+  else
+    runstate      = "down"
+    elapsed       = sv.downtime
+    unusual_state = "normally up" if sv.normally_up?      # Hmm!
+  end
+
+  elapsed = elapsed.round.to_s + 's'
+  want_state = sv.want_up?   ? "want up"   :
+               sv.want_down? ? "want down" :
+               ""
+
+  ["#{runstate}: #{name}:", pid_str, elapsed, unusual_state].compact.join(" ")
+rescue SystemCallError => e
+  "err: #{name}: No supervisor detected (#{e})"
+end
+
+def do_signal(sig, *dirs)
+  dirs.each do |dir|
+    begin
+      SvDir.new(dir).signal(sig)
+    rescue SystemCallError => e
+      $stderr.puts "error signalling #{dir}: #{e.message}"
+    end
+  end
+end
+
+def main
+  # A quick demonstration of Sys::Sv::SvDir ...
+  cmd = ARGV.shift
+
+  case cmd
+  when '--help', '-h', nil
+    usage_exit
+  when 'status'
+    ARGV.each do |dir|
+      sv = SvDir.new(dir)
+      sv_stat = formatted_status(sv, dir)
+      if log = sv.log
+        sv_stat += '; ' + formatted_status(log, 'log')
+      end
+      puts sv_stat
+    end
+  else
+    begin
+      do_signal(cmd, *ARGV)
+    rescue Exception => e
+      usage_exit("error: #{e.message}")
+    end
+  end
+end
+
+main if __FILE__ == $0

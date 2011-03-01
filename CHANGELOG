@@ -1,0 +1,26 @@
+2011-02-17 mjp
+  [api] Remove #epoch() method, #pid() now returns nil if service is not
+  running (formerly returned zero).
+  [int] Remove Forwardable delegation, refactor SvDir and StatusBytes
+  accordingly.  A skosh more efficient, but also puts method documentation
+  in the class that needs it.  
+  [tst] Update tests for API changes, delegation refactoring and corrupt
+  status file handling.
+  [doc] update LICENSE, copyright notice, README
+  [pkg] remove Echoe dependency, generate gem with vanilla rake tasks
+  (Rakefile)
+
+2008-10-13 mjp
+  [api] make that ENXIO/EWHATEVER on non-running supervisor.  Raise
+  EPROTO specifically on truncated 'status' file.
+  [tst] Fixtures::TempSvDir makes bona fide FIFOs, correctly makes
+  incremented tempdirs.  ts_control renamed ts_signal, also test non-
+  running supervisor (ts_nosupervisor).
+  [doc] note Errno:: conventions, use "supervisor" consistently.
+  
+2008-10-10 mjp
+  [bug] qualify 'ok' FIFO path (cpforbes).
+  [api] raise EPROTO for non-running supervisor.
+
+2008-10-06 mjp
+  Initial check-in.

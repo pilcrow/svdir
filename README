@@ -1,0 +1,67 @@
+Copyright (c) 2010, 2011 Qualys, Inc.
+
+Copyright (c) 2008 - 2010 Nemean Networks, LLC.
+
+= Overview
+
++svdir+ is a Ruby interface to the "service directory" style of robust daemon
+process supervision introducted in Dan Bernstein's +daemontools+ software and
+compatibly extended in Gerit Pape's +runit+ package.
+
+It exposes a programmatic interface to reliably starting, stopping, signalling
+and interrogating services all implemented directly -- no need to shell out to
+separate utilities.  See the documentation for Sys::Sv::SvDir for complete
+information.
+
+More information on +daemontools+ is available at
+http://cr.yp.to/daemontools.html.  More information on +runit+ is available at
+http://smarden.org/runit/.
+
+== Example
+
+The <tt>example/</tt> subdirectory in the source distribution contains a
+demonstration program which a system adminstrator might use to control daemons.
+
+Typical programmatic use of this software might look like this:
+
+    #! /usr/bin/env ruby
+
+    require 'sys/sv/svdir'
+    include Sys::Sv
+
+    # shut down all daemons running under /service
+    Dir["/service"].each do |svpath|
+      s = SvDir.new(svpath)
+
+      # force the .../log to shut down, ignoring services without loggers
+      s.log.signal(:exit) rescue nil
+
+      pid = s.pid
+      if pid != 0
+      	s.signal(:exit)
+        puts "Told #{s.path} (pid #{pid}) to exit"
+      end
+    end
+
+= Installation
+
+Look for the gem on http://rubygems.org.
+
+`rake package` will build a .gem under pkg/, and `rake rdoc` will
+generate module documentation.
+
+`rake test` and `rake rcov` will give a good idea of where the code is.
+
+= To Do
+
+* Further testing
+  - log()
+  - TAI64 testing
+
+* Possible extensions
+  - <tt>SvDir.new(d) &block</tt> - persist StatusBytes object for block?
+  - <tt>normally_down!</tt> and <tt>normally_up!</tt>
+
+= Author
+
+Mike Pomraning ("mpomraning" at "qualys" dot "com")
