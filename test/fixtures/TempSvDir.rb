@@ -18,15 +18,15 @@ module Fixtures
 
       # make a temporary dir
       begin
-        @svdirname = File.join(Dir::tmpdir, "TempSvDir.#{$$}.#{i}")
+        @svdirname = File.join(Dir.tmpdir, "TempSvDir.#{$$}.#{i}")
         i += 1
-        Dir::mkdir(@svdirname)
+        Dir.mkdir(@svdirname)
       rescue Errno::EEXIST
         retry if i < 100
-        raise RuntimeError.new("Unable to create a mock svc dir.  Check #{Dir::tmpdir}")
+        raise RuntimeError.new("Unable to create a mock svc dir.  Check #{Dir.tmpdir}")
       end
 
-      Dir::mkdir File.join(@svdirname, "supervise")
+      Dir.mkdir File.join(@svdirname, "supervise")
 
       # Make and hold open our FIFOs
       @fifos = {}

@@ -110,7 +110,7 @@ module Sv  # :nodoc:
     #   end
     def log
       fn = File.join(@path, 'log')
-      return self.class.new(fn) if File.exists? fn
+      return self.class.new(fn) if File.directory? fn
     end
 
     # Returns +true+ if the service directory's _supervisor_ is running.
@@ -142,7 +142,7 @@ module Sv  # :nodoc:
     # 
     # See also the #want_down? method documentation.
     def normally_down?
-      File.exists? File.join(@path, 'down')
+      File.exist? File.join(@path, 'down')
     end
 
     # Returns the number of seconds the service has been down,
