@@ -103,12 +103,6 @@ Fix: rewrite the Rakefile or replace with a `gemspec`.
   clearer.
 - No constants are frozen — adding `# freeze` to `Commands` and
   `StatusBytes::BUFLEN`/`TAI_EPOCH` is free rigor.
-- `statusbytes` private method opens `supervise/ok` (a FIFO) just as a
-  liveness probe on every status read.  Combined with the fact that
-  `#pid`, `#up?`, `#down?`, `#paused?`, `#want_up?`, `#want_down?`,
-  `#uptime`, `#downtime` all call `statusbytes`, this means a live
-  FIFO open+close per call.  A small cache or a batch-read method
-  would be more efficient for polling use cases.
 - Mix of `for` and `.each` iteration styles.
 - `#log` uses `File.exists?` rather than `File.directory?`, so it
   would match a regular file named `log` too.
@@ -119,10 +113,12 @@ The library is a thin, correct mapping over the daemontools/runit
 filesystem protocol.  No over-engineering.  The example `svctl` script
 demonstrates a typical workflow.
 
-The main efficiency consideration: every status query re-reads the
-binary `supervise/status` file from disk + probes the `supervise/ok`
-FIFO.  For a one-shot CLI tool this is fine.  For a long-running
-monitoring loop you'd want to cache the `StatusBytes` object briefly.
+Each method call reads the `supervise/status` file from scratch, which
+is by design — the interface provides point-in-time snapshots of a
+realtime daemon.  There is no locking convention in the DJB/runit
+ecosystem, and caching could return stale data.  A snapshot-oriented
+subclass or user-configurable overlay could be added if needed, but
+there's no inherent advantage for the common use case.
 
 ## Target Versions
 
@@ -165,7 +161,6 @@ All changes should target Ruby 3.3, 3.4, and 4.0.
 ### Optional (polish)
 
 7. Freeze constants (`Commands`, `BUFLEN`, `TAI_EPOCH`).
-8. Batch/cache status reads if polling performance matters.
 
 ## Test Results — Docker (Ruby 3.3, 3.4)
 
