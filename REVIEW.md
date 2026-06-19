@@ -138,3 +138,50 @@ monitoring loop you'd want to cache the `StatusBytes` object briefly.
    performance matters.
 8. Verify tests pass on a modern Ruby (≥2.7) — preferably in Docker
    to avoid polluting the host system.
+
+## Test Results — Ruby 3.4.9 (Docker)
+
+Ran 176 tests across 4 test files on `ruby:3.4` (released 2026-03-11).
+
+### Result: 82.95% passed
+
+```
+176 tests, 185 assertions, 2 failures, 28 errors
+```
+
+### Root cause of all failures
+
+**`File.exists?` removed in Ruby 3.4.** Every single error/failure traces to:
+
+```
+NoMethodError: undefined method 'exists?' for class File
+```
+
+Stack: `svdir.rb:145` → `normally_down?` → called by `normally_up?` and
+directly by tests.  `File.exists?` was deprecated in Ruby 2.x, issued
+warnings through 3.0–3.3, and was deleted in 3.4.
+
+### Breakdown
+
+| Test file | Tests | Errors | Failures | Cause |
+|---|---|---|---|---|
+| `ts_svstat.rb` | 130 | 24 | 0 | `File.exists?` in `normally_down?` |
+| `ts_corrupt.rb` | 24 | 4 | 0 | `File.exists?` in `normally_down?` |
+| `ts_nosupervisor.rb` | 14 | 0 | 2 | `File.exists?` in `normally_down?`/`log` |
+| `ts_signal.rb` | 8 | 0 | 0 | — |
+
+The signal tests (ts_signal.rb) passed cleanly — they exercise FIFO I/O
+via TempSvDir, not the `down` file check.
+
+### Bonus issue found at runtime
+
+`ts_nosupervisor.rb` defines `test_normally_down?` **twice** (lines 68 and
+75).  The second definition (intended to test `#log`) silently overwrites
+the first (which tested `#normally_down?`).  test-unit emits a notification:
+
+```
+Notification: <TestSvcNoSupervisor#test_normally_down?> was redefined
+```
+
+Line 75's test name should be `test_log` instead.  Only one `normally_down?`
+test in the no-supervisor case actually ran.
