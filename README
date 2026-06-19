@@ -54,10 +54,6 @@ generate module documentation.
 
 = To Do
 
-* Further testing
-  - log()
-  - TAI64 testing
-
 * Possible extensions
   - <tt>SvDir.new(d) &block</tt> - persist StatusBytes object for block?
   - <tt>normally_down!</tt> and <tt>normally_up!</tt>
