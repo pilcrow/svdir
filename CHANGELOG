@@ -1,3 +1,12 @@
+2026-06-19 mjp version 0.2.1
+  [bug] Replace deprecated `File.exists?`/`Dir::mkdir`/`Dir::tmpdir` calls for
+  Ruby 3.2+ compatibility.  Fix TAI64N nanosecond divisor (`10e9` → `1e9`).
+  [pkg] Modernize Rakefile, extract svdir.gemspec.
+  [tst] Fix duplicate test name and loop variable in test helpers.  Add TAI64N
+  timestamp tests.
+  [int] Freeze mutable constants (`VERSION`, `Commands`).
+  [doc] Update copyright notices.
+
 2011-02-28 mjp version 0.2
   [doc] Documentation touch-up, move from Qualys SVN to github.
 

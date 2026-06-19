@@ -1,6 +1,7 @@
 #
 # Author::  Mike Pomraning
 # Copyright:: Copyright (c) 2011 Qualys, Inc.
+# Copyright:: Copyright (c) 2016 Mike Pomraning
 # License:: MIT (see the file LICENSE)
 #
 

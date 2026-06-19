@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.author       = "Mike Pomraning"
   s.summary      = "An interface to service directories ala supervise/runsv"
   s.name         = 'svdir'
-  s.version      = '0.2'
+  s.version      = '0.2.1'
   s.require_path = 'lib'
   s.license      = 'MIT'
   s.description  = <<~eodesc

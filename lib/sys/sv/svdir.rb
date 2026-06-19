@@ -2,6 +2,7 @@
 
 # Author::  Mike Pomraning
 # Copyright:: Copyright (c) 2011 Qualys, Inc.
+# Copyright:: Copyright (c) 2026 Mike Pomraning
 # License:: MIT (see the file LICENSE)
 #
 
@@ -31,7 +32,7 @@ module Sv  # :nodoc:
  
   class SvDir
 
-    VERSION = '0.2'.freeze
+    VERSION = '0.2.1'.freeze
 
     attr_reader :path
 
