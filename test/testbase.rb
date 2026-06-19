@@ -13,8 +13,8 @@ class Test::Unit::TestCase
       if self == Test::Unit::TestCase
 
     for s in [sym, *optional]
-      load "fixtures/#{sym}.rb"
-      self.__send__(:include, Module.const_get(:Fixtures).const_get(sym))
+      load "fixtures/#{s}.rb"
+      self.__send__(:include, Module.const_get(:Fixtures).const_get(s))
     end
 
   end
