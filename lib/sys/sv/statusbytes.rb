@@ -42,7 +42,7 @@ module Sv  # :nodoc:
       if @epoch <= 0
         @epoch = 0.0
       else
-        @epoch += nano/10e9
+        @epoch += nano / 1e9
       end
 
       @epoch
