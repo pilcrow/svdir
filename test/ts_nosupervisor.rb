@@ -72,7 +72,7 @@ class TestSvcNoSupervisor < Test::Unit::TestCase
   end
  
   # Verify that log() still functions
-  def test_normally_down?
+  def test_log
     assert_nothing_raised do
       @svdir.log
     end
