@@ -124,24 +124,53 @@ binary `supervise/status` file from disk + probes the `supervise/ok`
 FIFO.  For a one-shot CLI tool this is fine.  For a long-running
 monitoring loop you'd want to cache the `StatusBytes` object briefly.
 
+## Target Versions
+
+The codebase should be updated to support **Ruby 3.3, 3.4, and 4.0**
+(the currently maintained Ruby branches as of June 2026).  Ruby 4.0 was
+released 2025-12-25 and is at 4.0.5; Ruby 3.4 at 3.4.9; Ruby 3.3 at
+3.3.11.
+
+Key compatibility facts discovered during review:
+
+- **Ruby 3.2 removed `File.exists?`** (and `Dir.exists?`), deprecated
+  since Ruby 2.1.  The code uses `File.exists?` in two places
+  (svdir.rb:113, 145) — this is the sole blocker across 3.3/3.4/4.0.
+  Ruby 3.1 still has it (with a deprecation warning).
+- **Ruby 4.0** introduces no further breaking changes relevant to this
+  codebase beyond what 3.2 enforces.  The library uses only core/stdlib.
+- The **Rakefile** relies on `rake/gempackagetask` and `rake/rdoctask`,
+  which were removed in Rake ≥12 (shipped with Ruby ≥3.x).  Needs a
+  rewrite regardless of Ruby version.
+
 ## Recommendations
 
-1. Fix the `10e9` → `1e9` typo (statusbytes.rb:45).
-2. Fix the `sym` → `s` loop variable (testbase.rb:15–17).
-3. Fix `File.exists?` → `File.exist?` and `File.exists?` → `File.directory?`
-   for the `log/` check (svdir.rb:113, 145).
-4. Fix `Dir::mkdir` → `Dir.mkdir`, `Dir::tmpdir` → `Dir.tmpdir`
+All changes should target Ruby 3.3, 3.4, and 4.0.
+
+### Required (blocking)
+
+1. **Fix `File.exists?` → `File.exist?`** (svdir.rb:113, 145).
+   Also change the `log/` check from `File.exists?` to `File.directory?`
+   for correctness (svdir.rb:113).
+2. **Fix the `10e9` → `1e9` typo** (statusbytes.rb:45).
+3. **Fix the `sym` → `s` loop variable** in `include_fixtures`
+   (testbase.rb:15–17).
+4. **Fix `Dir::mkdir` → `Dir.mkdir`, `Dir::tmpdir` → `Dir.tmpdir`**
    (TempSvDir.rb).
-5. Update the Rakefile for modern Rake / rubygems.
-6. Optionally freeze constants (`Commands`, `BUFLEN`, `TAI_EPOCH`).
-7. Optionally batch status reads or add a small cache if polling
-   performance matters.
-8. Verify tests pass on a modern Ruby (≥2.7) — preferably in Docker
-   to avoid polluting the host system.
+5. **Fix duplicate test name** `test_normally_down?` in ts_nosupervisor.rb.
+   Line 75 tests `#log` and should be named `test_log`.
+6. **Update Rakefile** — replace `rake/gempackagetask` and `rake/rdoctask`
+   with their modern equivalents, or replace with a `gemspec`.
 
-## Test Results — Ruby 3.4.9 (Docker)
+### Optional (polish)
 
-Ran 176 tests across 4 test files on `ruby:3.4` (released 2026-03-11).
+7. Freeze constants (`Commands`, `BUFLEN`, `TAI_EPOCH`).
+8. Batch/cache status reads if polling performance matters.
+
+## Test Results — Docker (Ruby 3.3, 3.4)
+
+Tests were run identically on `ruby:3.3` (3.3.11) and `ruby:3.4` (3.4.9).
+Both produced the same result.
 
 ### Result: 82.95% passed
 
@@ -151,15 +180,16 @@ Ran 176 tests across 4 test files on `ruby:3.4` (released 2026-03-11).
 
 ### Root cause of all failures
 
-**`File.exists?` removed in Ruby 3.4.** Every single error/failure traces to:
+**`File.exists?` removed in Ruby 3.2.** Every single error/failure traces to:
 
 ```
 NoMethodError: undefined method 'exists?' for class File
 ```
 
 Stack: `svdir.rb:145` → `normally_down?` → called by `normally_up?` and
-directly by tests.  `File.exists?` was deprecated in Ruby 2.x, issued
-warnings through 3.0–3.3, and was deleted in 3.4.
+directly by tests.  `File.exists?` was deprecated since Ruby 2.1, produced
+warnings in 3.0–3.1, and was deleted in 3.2.  Ruby 3.3, 3.4, and 4.0 all
+lack it.
 
 ### Breakdown
 
