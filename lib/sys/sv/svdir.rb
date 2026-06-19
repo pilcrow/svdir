@@ -31,7 +31,7 @@ module Sv  # :nodoc:
  
   class SvDir
 
-    VERSION = '0.2'
+    VERSION = '0.2'.freeze
 
     attr_reader :path
 
@@ -55,6 +55,8 @@ module Sv  # :nodoc:
       }.each do | cmds, byte |
         cmds.each { |c| h[c] = byte }
       end
+      h.each_value(&:freeze)
+      h.freeze
       const_set(:Commands, h)
     end
 

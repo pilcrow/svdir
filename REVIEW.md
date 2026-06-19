@@ -158,9 +158,11 @@ All changes should target Ruby 3.3, 3.4, and 4.0.
 6. **Update Rakefile** — replace `rake/gempackagetask` and `rake/rdoctask`
    with their modern equivalents, or replace with a `gemspec`.
 
-### Optional (polish)
+### Optional (polish, now applied)
 
-7. Freeze constants (`Commands`, `BUFLEN`, `TAI_EPOCH`).
+7. Freeze constants (`VERSION`, `Commands` + its values). `BUFLEN` and
+   `TAI_EPOCH` are Integers (immutable value types) and were left
+   as-is.
 
 ## Test Results — Docker (Ruby 3.3, 3.4)
 
