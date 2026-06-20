@@ -1,3 +1,7 @@
+2026-06-20 mjp version 0.3.0.pre
+  [api] add normally_up! and normally_down!(mode:nil)
+  [int] add Util.open_excl, remove fcntl dependencies
+
 2026-06-19 mjp version 0.2.1
   [bug] Replace deprecated `File.exists?`/`Dir::mkdir`/`Dir::tmpdir` calls for
   Ruby 3.2+ compatibility.  Fix TAI64N nanosecond divisor (`10e9` → `1e9`).

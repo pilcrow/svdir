@@ -54,8 +54,9 @@ generate module documentation.
 
 = To Do
 
-* Possible extensions
-  - <tt>SvDir.new(d) &block</tt> - persist StatusBytes object for block?
+  - Update gemspec
+  - rubocop
+  - <tt>SvDir#cached &block</tt> - persist StatusBytes object for block
 
 = Author
 
