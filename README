@@ -56,7 +56,6 @@ generate module documentation.
 
 * Possible extensions
   - <tt>SvDir.new(d) &block</tt> - persist StatusBytes object for block?
-  - <tt>normally_down!</tt> and <tt>normally_up!</tt>
 
 = Author
 

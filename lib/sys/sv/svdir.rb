@@ -137,6 +137,17 @@ module Sv  # :nodoc:
       ! normally_down?
     end
 
+    # Remove the <tt>./down</tt> file if present, indicating that a
+    # _supervisor_ should start the service without explicit instruction.
+    #
+    # Returns true if an existing <tt>./down</tt> file was removed.
+    def normally_up!
+      File.unlink(File.join(@path, 'down'))
+      true
+    rescue Errno::ENOENT
+      nil
+    end
+
     # Returns +true+ if a _supervisor_ will not start the service without
     # explicit instruction to do so.
     #
@@ -146,6 +157,20 @@ module Sv  # :nodoc:
     # See also the #want_down? method documentation.
     def normally_down?
       File.exist? File.join(@path, 'down')
+    end
+
+    # Create an empty <tt>./down</tt> file if it does not already exist,
+    # indicating that a _supervisor_ should not start the service without
+    # explicit instruction.
+    #
+    # Returns true if a <tt>./down</tt> file was newly created.
+    def normally_down!(mode: nil)
+      args = [File.join(@path, 'down'), File::CREAT | File::EXCL]
+      args << mode if mode
+      File.open(*args).close
+      true
+    rescue Errno::EEXIST
+      nil
     end
 
     # Returns the number of seconds the service has been down,
