@@ -160,15 +160,13 @@ module Sv  # :nodoc:
     end
 
     # Create an empty <tt>./down</tt> file if it does not already exist,
+    # optionally specifying a file creation +mode+ (e.g., 0666),
     # indicating that a _supervisor_ should not start the service without
     # explicit instruction.
     #
     # Returns true if a <tt>./down</tt> file was newly created.
     def normally_down!(mode: nil)
-      args = [File.join(@path, 'down'), File::CREAT | File::EXCL]
-      args << mode if mode
-      File.open(*args).close
-      true
+      Util::open_excl(File.join(@path, 'down'), mode: mode) {true}
     rescue Errno::EEXIST
       nil
     end

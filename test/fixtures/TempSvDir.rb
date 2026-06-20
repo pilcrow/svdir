@@ -56,7 +56,7 @@ module Fixtures
     private
     def openfifo(fn)
       system "mkfifo #{Regexp.quote(fn)}"
-      File.open(fn, Fcntl::O_NONBLOCK|Fcntl::O_RDONLY)
+      File.open(fn, File::NONBLOCK|File::RDONLY)
     end
   end
 
