@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 # Test the basics of service status interrogation
 #
 # Author::  Mike Pomraning
+# Copyright:: Copyright (c) 2026 Mike Pomraning
 # Copyright:: Copyright (c) 2011 Qualys, Inc.
 # License:: MIT (see the file LICENSE)
 #
@@ -36,7 +39,7 @@ class TC_corrupt_normu < Test::Unit::TestCase
   end
 
   def test_normally_up?
-    assert(@svdir.normally_up?, "normally_up? should still succeed even on corrupted SvDir")
+    assert(@svdir.normally_up?, 'normally_up? should still succeed even on corrupted SvDir')
   end
 
   def test_paused?
@@ -46,7 +49,7 @@ class TC_corrupt_normu < Test::Unit::TestCase
   end
 
   def test_normally_down?
-    assert(!@svdir.normally_down?, "normally_down? should still succeed even on corrupted SvDir")
+    assert(!@svdir.normally_down?, 'normally_down? should still succeed even on corrupted SvDir')
   end
 
   def test_up?
@@ -96,7 +99,7 @@ class TC_corrupt_normd < Test::Unit::TestCase
   end
 
   def test_normally_up?
-    assert(!@svdir.normally_up?, "normally_up? should still succeed even on corrupted SvDir")
+    assert(!@svdir.normally_up?, 'normally_up? should still succeed even on corrupted SvDir')
   end
 
   def test_paused?
@@ -106,7 +109,7 @@ class TC_corrupt_normd < Test::Unit::TestCase
   end
 
   def test_normally_down?
-    assert(@svdir.normally_down?, "normally_down? should still succeed even on corrupted SvDir")
+    assert(@svdir.normally_down?, 'normally_down? should still succeed even on corrupted SvDir')
   end
 
   def test_up?

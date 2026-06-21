@@ -1,8 +1,21 @@
+AllCops:
+    NewCops: enable
+Layout/BlockAlignment:
+  EnforcedStyleAlignWith: start_of_block
+Naming/ClassAndModuleCamelCase:
+  Exclude:
+    - 'test/ts_corrupt.rb'
+    - 'test/ts_svstat.rb'
+Naming/FileName:
+  Exclude:
+    - 'test/fixtures/PrefabSvDir.rb'
+    - 'test/fixtures/TempSvDir.rb'
+Naming/MethodName:
+  Exclude:
+    - 'test/ts_signal.rb'
 Naming/MethodParameterName:
   AllowedNames:
     - fn
     - p
-Layout/BlockAlignment:
-  EnforcedStyleAlignWith: start_of_block
 Style/CommentedKeyword:
   Enabled: false

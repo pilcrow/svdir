@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 # Test the basics of service status interrogation
 #
 # Author::  Mike Pomraning
+# Copyright:: Copyright (c) 2026 Mike Pomraning
 # Copyright:: Copyright (c) 2011 Qualys, Inc.
 # License:: MIT (see the file LICENSE)
 #
@@ -48,10 +51,9 @@ class TC_down_0_normd_nowant < Test::Unit::TestCase
   end
 
   def test_uptime
-    assert(@svdir.uptime.nil?, "uptime was not nil")
+    assert(@svdir.uptime.nil?, 'uptime was not nil')
   end
 end
-
 
 class TC_down_0_normu_nowant < Test::Unit::TestCase
   include_fixture :PrefabSvDir
@@ -93,10 +95,9 @@ class TC_down_0_normu_nowant < Test::Unit::TestCase
   end
 
   def test_uptime
-    assert(@svdir.uptime.nil?, "uptime was not nil")
+    assert(@svdir.uptime.nil?, 'uptime was not nil')
   end
 end
-
 
 class TC_up_12526_normu_wantd < Test::Unit::TestCase
   include_fixture :PrefabSvDir
@@ -110,7 +111,7 @@ class TC_up_12526_normu_wantd < Test::Unit::TestCase
   end
 
   def test_pid
-    assert_equal(@svdir.pid, 12526)
+    assert_equal(@svdir.pid, 12_526)
   end
 
   def test_want_down?
@@ -134,14 +135,13 @@ class TC_up_12526_normu_wantd < Test::Unit::TestCase
   end
 
   def test_downtime
-    assert(@svdir.downtime.nil?, "downtime was not nil")
+    assert(@svdir.downtime.nil?, 'downtime was not nil')
   end
 
   def test_uptime
     assert_elapsed_time(@svdir.uptime)
   end
 end
-
 
 class TC_up_12581_normd_wantd_paused < Test::Unit::TestCase
   include_fixture :PrefabSvDir
@@ -155,7 +155,7 @@ class TC_up_12581_normd_wantd_paused < Test::Unit::TestCase
   end
 
   def test_pid
-    assert_equal(@svdir.pid, 12581)
+    assert_equal(@svdir.pid, 12_581)
   end
 
   def test_want_down?
@@ -179,14 +179,13 @@ class TC_up_12581_normd_wantd_paused < Test::Unit::TestCase
   end
 
   def test_downtime
-    assert(@svdir.downtime.nil?, "downtime was not nil")
+    assert(@svdir.downtime.nil?, 'downtime was not nil')
   end
 
   def test_uptime
     assert_elapsed_time(@svdir.uptime)
   end
 end
-
 
 class TC_up_12581_normu_wantd_paused < Test::Unit::TestCase
   include_fixture :PrefabSvDir
@@ -200,7 +199,7 @@ class TC_up_12581_normu_wantd_paused < Test::Unit::TestCase
   end
 
   def test_pid
-    assert_equal(@svdir.pid, 12581)
+    assert_equal(@svdir.pid, 12_581)
   end
 
   def test_want_down?
@@ -224,14 +223,13 @@ class TC_up_12581_normu_wantd_paused < Test::Unit::TestCase
   end
 
   def test_downtime
-    assert(@svdir.downtime.nil?, "downtime was not nil")
+    assert(@svdir.downtime.nil?, 'downtime was not nil')
   end
 
   def test_uptime
     assert_elapsed_time(@svdir.uptime)
   end
 end
-
 
 class TC_up_12816_normd_nowant < Test::Unit::TestCase
   include_fixture :PrefabSvDir
@@ -245,7 +243,7 @@ class TC_up_12816_normd_nowant < Test::Unit::TestCase
   end
 
   def test_pid
-    assert_equal(@svdir.pid, 12816)
+    assert_equal(@svdir.pid, 12_816)
   end
 
   def test_want_down?
@@ -269,14 +267,13 @@ class TC_up_12816_normd_nowant < Test::Unit::TestCase
   end
 
   def test_downtime
-    assert(@svdir.downtime.nil?, "downtime was not nil")
+    assert(@svdir.downtime.nil?, 'downtime was not nil')
   end
 
   def test_uptime
     assert_elapsed_time(@svdir.uptime)
   end
 end
-
 
 class TC_up_12816_normu_nowant < Test::Unit::TestCase
   include_fixture :PrefabSvDir
@@ -290,7 +287,7 @@ class TC_up_12816_normu_nowant < Test::Unit::TestCase
   end
 
   def test_pid
-    assert_equal(@svdir.pid, 12816)
+    assert_equal(@svdir.pid, 12_816)
   end
 
   def test_want_down?
@@ -314,14 +311,13 @@ class TC_up_12816_normu_nowant < Test::Unit::TestCase
   end
 
   def test_downtime
-    assert(@svdir.downtime.nil?, "downtime was not nil")
+    assert(@svdir.downtime.nil?, 'downtime was not nil')
   end
 
   def test_uptime
     assert_elapsed_time(@svdir.uptime)
   end
 end
-
 
 class TC_up_12868_normd_wantu < Test::Unit::TestCase
   include_fixture :PrefabSvDir
@@ -335,7 +331,7 @@ class TC_up_12868_normd_wantu < Test::Unit::TestCase
   end
 
   def test_pid
-    assert_equal(@svdir.pid, 12868)
+    assert_equal(@svdir.pid, 12_868)
   end
 
   def test_want_down?
@@ -359,14 +355,13 @@ class TC_up_12868_normd_wantu < Test::Unit::TestCase
   end
 
   def test_downtime
-    assert(@svdir.downtime.nil?, "downtime was not nil")
+    assert(@svdir.downtime.nil?, 'downtime was not nil')
   end
 
   def test_uptime
     assert_elapsed_time(@svdir.uptime)
   end
 end
-
 
 class TC_up_12868_normd_wantu_paused < Test::Unit::TestCase
   include_fixture :PrefabSvDir
@@ -380,7 +375,7 @@ class TC_up_12868_normd_wantu_paused < Test::Unit::TestCase
   end
 
   def test_pid
-    assert_equal(@svdir.pid, 12868)
+    assert_equal(@svdir.pid, 12_868)
   end
 
   def test_want_down?
@@ -404,14 +399,13 @@ class TC_up_12868_normd_wantu_paused < Test::Unit::TestCase
   end
 
   def test_downtime
-    assert(@svdir.downtime.nil?, "downtime was not nil")
+    assert(@svdir.downtime.nil?, 'downtime was not nil')
   end
 
   def test_uptime
     assert_elapsed_time(@svdir.uptime)
   end
 end
-
 
 class TC_up_12868_normu_wantu < Test::Unit::TestCase
   include_fixture :PrefabSvDir
@@ -425,7 +419,7 @@ class TC_up_12868_normu_wantu < Test::Unit::TestCase
   end
 
   def test_pid
-    assert_equal(@svdir.pid, 12868)
+    assert_equal(@svdir.pid, 12_868)
   end
 
   def test_want_down?
@@ -449,14 +443,13 @@ class TC_up_12868_normu_wantu < Test::Unit::TestCase
   end
 
   def test_downtime
-    assert(@svdir.downtime.nil?, "downtime was not nil")
+    assert(@svdir.downtime.nil?, 'downtime was not nil')
   end
 
   def test_uptime
     assert_elapsed_time(@svdir.uptime)
   end
 end
-
 
 class TC_up_12868_normu_wantu_paused < Test::Unit::TestCase
   include_fixture :PrefabSvDir
@@ -470,7 +463,7 @@ class TC_up_12868_normu_wantu_paused < Test::Unit::TestCase
   end
 
   def test_pid
-    assert_equal(@svdir.pid, 12868)
+    assert_equal(@svdir.pid, 12_868)
   end
 
   def test_want_down?
@@ -494,14 +487,13 @@ class TC_up_12868_normu_wantu_paused < Test::Unit::TestCase
   end
 
   def test_downtime
-    assert(@svdir.downtime.nil?, "downtime was not nil")
+    assert(@svdir.downtime.nil?, 'downtime was not nil')
   end
 
   def test_uptime
     assert_elapsed_time(@svdir.uptime)
   end
 end
-
 
 class TC_up_16464_normd_wantd < Test::Unit::TestCase
   include_fixture :PrefabSvDir
@@ -515,7 +507,7 @@ class TC_up_16464_normd_wantd < Test::Unit::TestCase
   end
 
   def test_pid
-    assert_equal(@svdir.pid, 16464)
+    assert_equal(@svdir.pid, 16_464)
   end
 
   def test_want_down?
@@ -539,7 +531,7 @@ class TC_up_16464_normd_wantd < Test::Unit::TestCase
   end
 
   def test_downtime
-    assert(@svdir.downtime.nil?, "downtime was not nil")
+    assert(@svdir.downtime.nil?, 'downtime was not nil')
   end
 
   def test_uptime

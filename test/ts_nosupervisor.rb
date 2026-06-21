@@ -1,20 +1,23 @@
-#!/usr/bin/env ruby
-# 
+# frozen_string_literal: true
+
 # Handle the case of no supervisor running
 #
 # Author::  Mike Pomraning
-# Copyright:: Copyright (c) 2011 Qualys, Inc.
 # Copyright:: Copyright (c) 2026 Mike Pomraning
+# Copyright:: Copyright (c) 2011 Qualys, Inc.
 # License:: MIT (see the file LICENSE)
 #
 
-$:.unshift File.join(File.dirname(__FILE__), "lib")
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
 
 require 'testbase'
 require 'sys/sv/svdir'
 
 class TestSvcNoSupervisor < Test::Unit::TestCase
-
+  # rubocop:disable Style/SymbolArray
+  STATUSBYTES_DELEGATORS = [:down?, :downtime, :paused?, :pid,
+                            :up?, :uptime, :want_down?, :want_up?].freeze
+  # rubocop:enable Style/SymbolArray
   include_fixture :TempSvDir
 
   def setup
@@ -27,7 +30,7 @@ class TestSvcNoSupervisor < Test::Unit::TestCase
 
   # Verify that unknown signal arguments still throw ArgumentError
   def test_signal_unknown
-    [ :invalid, 'invalid' ].each do |bogus|
+    [:invalid, 'invalid'].each do |bogus|
       assert_raise ArgumentError do
         @svdir.signal bogus
       end
@@ -36,7 +39,7 @@ class TestSvcNoSupervisor < Test::Unit::TestCase
 
   # Verify that a known signal generates ENXIO
   def test_signal_up
-    [ :up, 'up' ].each do |c|
+    [:up, 'up'].each do |c|
       assert_raise Errno::ENXIO do
         @svdir.signal c
       end
@@ -49,8 +52,7 @@ class TestSvcNoSupervisor < Test::Unit::TestCase
   end
 
   # Verify that the StatusBytes delegates throw ENXIO
-  [:down?, :downtime, :paused?, :pid, :up?, :uptime, :want_down?, :want_up?].
-  each do |m|
+  STATUSBYTES_DELEGATORS.each do |m|
     define_method "test_err_#{m}" do
       assert_raise Errno::ENXIO do
         @svdir.__send__(m)
@@ -71,12 +73,11 @@ class TestSvcNoSupervisor < Test::Unit::TestCase
       @svdir.normally_down?
     end
   end
- 
+
   # Verify that log() still functions
   def test_log
     assert_nothing_raised do
       @svdir.log
     end
   end
-
 end

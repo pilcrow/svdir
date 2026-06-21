@@ -1,5 +1,5 @@
-#!/usr/bin/env ruby
-#
+# frozen_string_literal: true
+
 # Test TAI64N timestamp parsing and the nanosecond field
 #
 # Author::  Mike Pomraning
@@ -10,15 +10,15 @@
 require 'testbase'
 require 'sys/sv/statusbytes'
 
-class TC_Tai64N < Test::Unit::TestCase
+class TestTai64N < Test::Unit::TestCase
   include Sys::Sv
 
   # Build an 18-byte status buffer from a raw TAI64N timestamp.
   # The 12-byte TAI64N label stores (tai64_secs) as an 8-byte big-endian
   # uint64 split into hi/lo 32-bit words, plus nanoseconds as 4 bytes.
-  def make_status(tai64_hi, tai64_lo, nano, pid = 0, pause = 0, want = "\x00")
+  def make_status(tai64_hi, tai64_lo, nano, pid = 0, pause = 0, want = "\x00") # rubocop:disable Metrics/ParameterLists
     [tai64_hi, tai64_lo, nano].pack('NNN') +
-    [pid].pack('V') + [pause].pack('c') + [want].pack('a')
+      [pid].pack('V') + [pause].pack('c') + [want].pack('a')
   end
 
   # The on-wire TAI64 value is:  tai64 = unix_epoch + TAI_EPOCH
@@ -39,10 +39,10 @@ class TC_Tai64N < Test::Unit::TestCase
 
   # Unix epoch 2009-02-13 23:31:20 +0000 = 1234567880
   def test_known_timestamp
-    tai64 = tai64_from_unix(1234567880)
+    tai64 = tai64_from_unix(1_234_567_880)
     buf = make_status(hi32(tai64), lo32(tai64), 500_000_000)
     sb  = StatusBytes.new(buf)
-    assert_in_delta(1234567880.5, sb.epoch, 0.000_001)
+    assert_in_delta(1_234_567_880.5, sb.epoch, 0.000_001)
   end
 
   # Zero nanoseconds
@@ -67,6 +67,6 @@ class TC_Tai64N < Test::Unit::TestCase
     buf = make_status(hi32(tai64), lo32(tai64), 500_000_000)
     sb  = StatusBytes.new(buf)
     assert_kind_of(Float, sb.elapsed)
-    assert(sb.elapsed > 0)
+    assert(sb.elapsed.positive?)
   end
 end
