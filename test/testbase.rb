@@ -14,7 +14,7 @@ class Test::Unit::TestCase # rubocop:disable Style/ClassAndModuleChildren
       if self == Test::Unit::TestCase
 
     [sym, *optional].each do |s|
-      load "fixtures/#{s}.rb"
+      require_relative "fixtures/#{s}.rb"
       __send__(:include, Module.const_get(:Fixtures).const_get(s))
     end
   end
