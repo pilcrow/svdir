@@ -1,6 +1,8 @@
 2026-06-20 mjp version 0.3.0.pre
   [api] add normally_up! and normally_down!(mode:nil)
-  [int] add Util.open_excl, remove fcntl dependencies
+  [int] RuboCop changes across lib/, test/, and example.  Remove fcntl
+  dependencies, add Util.open_excl.  Load test fixtures with
+  require_relative.
 
 2026-06-19 mjp version 0.2.1
   [bug] Replace deprecated `File.exists?`/`Dir::mkdir`/`Dir::tmpdir` calls for
