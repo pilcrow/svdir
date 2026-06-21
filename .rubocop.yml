@@ -1,0 +1,8 @@
+Naming/MethodParameterName:
+  AllowedNames:
+    - fn
+    - p
+Layout/BlockAlignment:
+  EnforcedStyleAlignWith: start_of_block
+Style/CommentedKeyword:
+  Enabled: false

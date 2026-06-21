@@ -1,25 +1,23 @@
-#
+# frozen_string_literal: true
+
 # Author::  Mike Pomraning
 # Copyright:: Copyright (c) 2011 Qualys, Inc.
 # Copyright:: Copyright (c) 2026 Mike Pomraning
 # License:: MIT (see the file LICENSE)
-# 
+#
 
 module Sys # :nodoc:
-module Sv  # :nodoc:
-
+module Sv  # :nodoc: # rubocop:disable Layout::IndentationWidth
   # The StatusBytes class interprets state files maintained by a SvDir's
   # _monitor_ process.  It should normally not be instantiated directly.
   class StatusBytes # :nodoc:
-    BUFLEN    = 18                  # TODO - grok runit extended info (20 bytes)
-    TAI_EPOCH = 4611686018427387914 # time_t 0 on the TAI scale
+    BUFLEN    = 18                        # TODO: grok runit extended info (20 bytes)
+    TAI_EPOCH = 4_611_686_018_427_387_914 # time_t 0 on the TAI scale
 
     attr_reader :pid, :pauseflag, :wantflag
 
     def initialize(bytes) # :nodoc:
-      if bytes.size < BUFLEN
-        raise ::Errno::EPROTO.new("corrupt status buffer")
-      end
+      raise(::Errno::EPROTO, 'corrupt status buffer') if bytes.size < BUFLEN
 
       @bytes = bytes
       @pid, @pauseflag, @wantflag = @bytes.unpack('x12 V c a')
@@ -29,7 +27,7 @@ module Sv  # :nodoc:
     # Number of seconds since service was most recently started or
     # stopped.
     def elapsed
-      ::Time.now.to_f - epoch()
+      ::Time.now.to_f - epoch
     end
 
     # Returns the number of seconds since the UNIX epoch since the
@@ -49,6 +47,5 @@ module Sv  # :nodoc:
       @epoch
     end
   end
-
 end #-- module Sv
 end #-- module Sys
