@@ -55,7 +55,7 @@ generate module documentation.
 = To Do
 
   - Update gemspec
-  - rubocop
+  - README.md
   - Support runit statusbytes extentions:
     offset  0  NN  tai seconds (big-endian)
             8   N  tai nanoseconds (big-endian)
@@ -64,7 +64,9 @@ generate module documentation.
            17   a  want ('u' or 'd')
            18   c  term? (0 or 1)*
            19   a  state (0 down, 1 running, 2 finish)*
-  - <tt>SvDir#cached &block</tt> - persist StatusBytes object for block
+  - <tt>SvDir#cached &block</tt> ? persist StatusBytes object for block
+  - #status method returns raw bytes
+  - convenience wait_for_state(timeout:) ?
 
 = Author
 
