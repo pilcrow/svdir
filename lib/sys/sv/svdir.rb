@@ -191,7 +191,10 @@ module Sv  # :nodoc: # rubocop:disable Layout::IndentationWidth
       p.zero? ? nil : p
     end
 
-    # +true+ if the service is not running.
+    # +true+ if the service is not running.  For supervisors that
+    # provide extended state (runit +runsv+), this checks the
+    # #run_state field; otherwise falls back to whether #pid is
+    # zero (daemontools +supervise+).
     def down?
       if (s = run_state)
         s == :down       # runit
@@ -223,16 +226,26 @@ module Sv  # :nodoc: # rubocop:disable Layout::IndentationWidth
       statusbytes.wantflag == 'u'
     end
 
-    # Returns +true+ or +false+ if a TERM has been sent to the service,
-    # or +nil+ if this status field is unsupported.
+    # Returns +true+ or +false+ if a SIGTERM has been sent to the service
+    # (by the supervisor), or +nil+ if the supervisor does not support
+    # this status field.
+    #
+    # This is a runit extension (+runsv+ only); daemontools +supervise+
+    # does not provide this field.
     def term_sent?
       term = statusbytes.termflag
       term.nil? ? nil : term != 0
     end
 
-    # Return the extended state of the service:  +:down+, +:run+, or
-    # +:finish+.
-    # If not supported, returns +nil+.
+    # Return the extended state of the service as a symbol, or +nil+ if
+    # the supervisor does not support this status field.
+    #
+    # [+:down+]   service is not running (pid is zero)
+    # [+:run+]    service is running (<tt>./run</tt>)
+    # [+:finish+] finish script is running (<tt>./finish</tt>)
+    #
+    # This is a runit extension (+runsv+ only); daemontools +supervise+
+    # does not provide this field and returns +nil+.
     def run_state
       case statusbytes.runstate
       when 0 then :down
@@ -242,6 +255,9 @@ module Sv  # :nodoc: # rubocop:disable Layout::IndentationWidth
       end
     end
 
+    # Return the raw +supervise/status+ bytes (18 or 20), or +nil+
+    # if the supervisor is not running.  The binary layout is
+    # documented in +StatusBytes+.
     def raw_status
       statusbytes.bytes
     end

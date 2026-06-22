@@ -54,18 +54,8 @@ generate module documentation.
 
 = To Do
 
-  - Update gemspec
-  - README.md
-  - Support runit statusbytes extentions:
-    offset  0  NN  tai seconds (big-endian)
-            8   N  tai nanoseconds (big-endian)
-           12   V  pid (little-endian)
-           16   c  paused (0 or 1)
-           17   a  want ('u' or 'd')
-           18   c  term? (0 or 1)*
-           19   a  state (0 down, 1 running, 2 finish)*
+  - README.md (this file, as RDoc)
   - <tt>SvDir#cached &block</tt> ? persist StatusBytes object for block
-  - #status method returns raw bytes
   - convenience wait_for_state(timeout:) ?
 
 = Author
