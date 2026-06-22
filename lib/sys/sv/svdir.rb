@@ -5,11 +5,12 @@
 # Copyright:: Copyright (c) 2026 Mike Pomraning
 # License:: MIT (see the file LICENSE)
 
+require 'sys/sv/svdir/version'
 require 'sys/sv/statusbytes' # class StatusBytes
 require 'sys/sv/util'        # Util::open_write(), open_read()
 
 module Sys # :nodoc:
-module Sv  # :nodoc: # rubocop:disable Layout::IndentationWidth
+module Sv  # :nodoc: # rubocop:disable Layout/IndentationWidth
   # The SvDir class encapsulates service directories, a scheme for
   # reliably controlling daemon processes (services) introduced in Dan
   # Bernstein's +daemontools+ software.
@@ -28,8 +29,6 @@ module Sv  # :nodoc: # rubocop:disable Layout::IndentationWidth
   # +ENXIO+ is raised if the _supervisor_ itself isn't running.
   #
   class SvDir # rubocop:disable Metrics/ClassLength
-    VERSION = '0.3.0.pre'
-
     attr_reader :path
 
     # ...SvDir::Commands = { :alarm => 'a', :ALRM => 'a', :exit => 'x' ... }
@@ -232,7 +231,7 @@ module Sv  # :nodoc: # rubocop:disable Layout::IndentationWidth
     #
     # This is a runit extension (+runsv+ only); daemontools +supervise+
     # does not provide this field.
-    def term_sent?
+    def term_sent? # rubocop:disable Style/ReturnNilInPredicateMethodDefinition
       term = statusbytes.termflag
       term.nil? ? nil : term != 0
     end
@@ -251,7 +250,6 @@ module Sv  # :nodoc: # rubocop:disable Layout::IndentationWidth
       when 0 then :down
       when 1 then :run
       when 2 then :finish
-      else        nil
       end
     end
 
@@ -280,9 +278,9 @@ module Sv  # :nodoc: # rubocop:disable Layout::IndentationWidth
 
       buf = Util.open_read(svfn('status')) do |f|
               f.sysread(StatusBytes::BUFLEN)
-            rescue ::EOFError # rubocop:disable Layout::RescueEnsureAlignment
+            rescue ::EOFError # rubocop:disable Layout/RescueEnsureAlignment
               ''
-            end               # rubocop:disable Layout::BlockAlignment
+            end               # rubocop:disable Layout/BlockAlignment
       StatusBytes.new(buf)
     end
   end #-- class SvDir

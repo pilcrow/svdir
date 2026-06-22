@@ -7,7 +7,7 @@
 #
 
 module Sys # :nodoc:
-module Sv  # :nodoc: # rubocop:disable Layout::IndentationWidth
+module Sv  # :nodoc: # rubocop:disable Layout/IndentationWidth
   module Util # :nodoc:
     def self.open_read(fn, &p)
       open_nonblock(fn, File::RDONLY, nil, p)
