@@ -183,7 +183,9 @@ module Sv  # :nodoc: # rubocop:disable Layout::IndentationWidth
     end
 
     # Return the pid of the service running under this SvDir, or
-    # +nil+ if no service is running.
+    # +nil+ if no service is running.  Under some supervisors, may
+    # return the pid of supporting processes like <tt>./finish</tt>
+    # if those are running.
     def pid
       p = statusbytes.pid
       p.zero? ? nil : p
@@ -191,7 +193,11 @@ module Sv  # :nodoc: # rubocop:disable Layout::IndentationWidth
 
     # +true+ if the service is not running.
     def down?
-      pid.nil?
+      if (s = run_state)
+        s == :down       # runit
+      else
+        pid.nil?         # daemontools fallback
+      end
     end
 
     # +true+ if the service is running, even if paused.
@@ -215,6 +221,29 @@ module Sv  # :nodoc: # rubocop:disable Layout::IndentationWidth
     # bring the service up.
     def want_up?
       statusbytes.wantflag == 'u'
+    end
+
+    # Returns +true+ or +false+ if a TERM has been sent to the service,
+    # or +nil+ if this status field is unsupported.
+    def term_sent?
+      term = statusbytes.termflag
+      term.nil? ? nil : term != 0
+    end
+
+    # Return the extended state of the service:  +:down+, +:run+, or
+    # +:finish+.
+    # If not supported, returns +nil+.
+    def run_state
+      case statusbytes.runstate
+      when 0 then :down
+      when 1 then :run
+      when 2 then :finish
+      else        nil
+      end
+    end
+
+    def raw_status
+      statusbytes.bytes
     end
 
     private

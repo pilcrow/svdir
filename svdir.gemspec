@@ -1,8 +1,6 @@
-require_relative 'lib/sys/sv/svdir'
-
 Gem::Specification.new do |s|
   s.name         = 'svdir'
-  s.version      = Sys::Sv::SvDir::VERSION
+  s.version      = '0.3.0.pre'
   s.required_ruby_version = '>= 2.6.0'
   s.summary      = "An interface to service directories ala supervise/runsv"
   s.platform     = Gem::Platform::RUBY
