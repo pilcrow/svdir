@@ -537,4 +537,10 @@ class TC_up_16464_normd_wantd < Test::Unit::TestCase
   def test_uptime
     assert_elapsed_time(@svdir.uptime)
   end
+
+  def test_raw_status
+    assert_equal 18, @svdir.raw_status.bytesize
+    assert_nil @svdir.term_sent?
+    assert_nil @svdir.run_state
+  end
 end
