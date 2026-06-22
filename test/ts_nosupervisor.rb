@@ -16,7 +16,8 @@ require 'sys/sv/svdir'
 class TestSvcNoSupervisor < Test::Unit::TestCase
   # rubocop:disable Style/SymbolArray
   STATUSBYTES_DELEGATORS = [:down?, :downtime, :paused?, :pid,
-                            :up?, :uptime, :want_down?, :want_up?].freeze
+                            :up?, :uptime, :want_down?, :want_up?,
+                            :run_state, :term_sent?, :raw_status].freeze
   # rubocop:enable Style/SymbolArray
   include_fixture :TempSvDir
 
