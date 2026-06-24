@@ -3,9 +3,10 @@
   daemontools 18-byte format.  Add +SvDir#run_state+, +#term_sent?+,
   and +#raw_status+.  Extend +StatusBytes+ with +termflag+ and
   +runstate+ attributes, accepting both buffer sizes.
+  [int] Relocate VERSION constant.
   [doc] Document both status formats in +StatusBytes+.
   [tst] Fixture directories with 20-byte status files; new test file
-  for runit extensions.
+  for runit extensions. Use File.mkfifo over mkfifo(1).
 
 2026-06-20 mjp version 0.3.0.pre
   [api] add normally_up! and normally_down!(mode:nil)

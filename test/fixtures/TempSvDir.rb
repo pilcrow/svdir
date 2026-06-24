@@ -60,7 +60,7 @@ module Fixtures
     private
 
     def openfifo(fn)
-      system "mkfifo #{Regexp.quote(fn)}"
+      File.mkfifo(fn)
       File.open(fn, File::NONBLOCK | File::RDONLY)
     end
   end
