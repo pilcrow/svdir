@@ -403,10 +403,11 @@ class TestCachedLog < Test::Unit::TestCase
 
   def setup
     ret = super
-    # Create a log subdirectory with its own supervise/status
+    # Create a log subdirectory with its own supervise/{status,ok}
     log_sv = File.join(@svdirname, 'log', 'supervise')
     FileUtils.mkdir_p(log_sv)
     File.write(File.join(log_sv, 'status'), self.class::LOG_STATUS_BYTES)
+    File.write(File.join(log_sv, 'ok'), '')
     ret
   end
 
@@ -433,12 +434,12 @@ class TestCachedSvok < Test::Unit::TestCase
   STATUS_BYTES = [0x40000000, 0x6562E70A, 500_000_000,
                   12_345, 0, 'u'].pack('NNNVca')
 
-  def test_svok_not_cached
+  def test_svok_cached
     c = @svdir.cached
     assert c.svok?  # FIFO ok is held open by fixture
 
     fifo_ok.close
-    # svok? should now fail — it's not cached
-    assert !c.svok?
+    # svok? should still succeed
+    assert c.svok?
   end
 end

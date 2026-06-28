@@ -260,6 +260,22 @@ module Sv  # :nodoc: # rubocop:disable Layout/IndentationWidth
       statusbytes.bytes
     end
 
+    # Return or yield a lazily-cached snapshot proxy +Cached+.
+    #
+    # When called with a block, the block receives the +Cached+
+    # instance and the method returns the block's return value.
+    # When called without a block, the +Cached+ instance is returned.
+    #
+    # Note that service modifying methods still work (e.g., +#signal+
+    # or +#normally_down!+), but the +Cached+ object won't be able
+    # to confirm the system side effects of these calls.
+    #
+    # +#log+ returns a +Cached+ log object.
+    def cached(&block)
+      obj = Cached.new(@path)
+      block ? block.call(obj) : obj
+    end
+
     private
 
     def elapsed
@@ -283,6 +299,39 @@ module Sv  # :nodoc: # rubocop:disable Layout/IndentationWidth
             end               # rubocop:disable Layout/BlockAlignment
       StatusBytes.new(buf)
     end
+
+    # Lazily-cached snapshot proxy for SvDir.
+    #
+    # A +Cached+ instance reads +supervise/status+ and +./down+ at most
+    # once.  All status-reading methods (pid, up?, down?, paused?, etc.)
+    # return values from that single snapshot.  Mutating methods (signal,
+    # normally_up!, normally_down!, log) pass through directly.
+    #
+    # Errors on first access are not cached, so transient failures will
+    # be retried on subsequent calls.
+    class Cached < self
+      def initialize(path)
+        super(path)
+        @_cache = {}
+      end
+
+      # Return the cached status bytes, reading them on first access.
+      def statusbytes
+        @_cache[:statusbytes] ||= super
+      end
+
+      # Return the cached normally_down? state, reading on first access.
+      def normally_down?
+        @_cache[:normally_down?] = super unless @_cache.key?(:normally_down?)
+        @_cache[:normally_down?]
+      end
+
+      # Return the cached svok? state, reading on first access.
+      def svok?
+        @_cache[:svok?] = super unless @_cache.key?(:svok?)
+        @_cache[:svok?]
+      end
+    end #-- class Cached
   end #-- class SvDir
 end #-- module Sv
 end #-- module Sys
