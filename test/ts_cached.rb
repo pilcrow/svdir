@@ -172,7 +172,7 @@ end
 # TempSvDir-based tests — real FIFOs, live supervisor simulation
 # ---------------------------------------------------------------------------
 
-class TC_cached_lazy < Test::Unit::TestCase
+class TestCachedLazy < Test::Unit::TestCase
   include_fixture :TempSvDir
 
   STATUS_BYTES = [0x40000000, 0x6562E70A, 500_000_000,
@@ -217,7 +217,7 @@ class TC_cached_lazy < Test::Unit::TestCase
   end
 end
 
-class TC_cached_mutable < Test::Unit::TestCase
+class TestCachedMutable < Test::Unit::TestCase
   include_fixture :TempSvDir
 
   STATUS_BYTES = [0x40000000, 0x6562E70A, 500_000_000,
@@ -286,7 +286,7 @@ class TC_cached_mutable < Test::Unit::TestCase
   end
 end
 
-class TC_cached_error < Test::Unit::TestCase
+class TestCachedError < Test::Unit::TestCase
   include_fixture :TempSvDir
 
   STATUS_BYTES = [0x40000000, 0x6562E70A, 500_000_000,
@@ -334,20 +334,20 @@ class TC_cached_error < Test::Unit::TestCase
   end
 end
 
-class TC_cached_corrupt < Test::Unit::TestCase
+class TestCachedCorrupt < Test::Unit::TestCase
   include_fixture :TempSvDir
 
   # 17 bytes — too short for 18 or 20, triggers EPROTO
   STATUS_BYTES = "\x00" * 17
 
-  def test_epetro_on_first_access
+  def test_eproto_on_first_access
     c = @svdir.cached
     assert_raise Errno::EPROTO do
       c.pid
     end
   end
 
-  def test_epetro_not_cached
+  def test_eproto_not_cached
     c = @svdir.cached
     assert_raise Errno::EPROTO do
       c.pid
@@ -366,7 +366,7 @@ class TC_cached_corrupt < Test::Unit::TestCase
   end
 end
 
-class TC_cached_nesting < Test::Unit::TestCase
+class TestCachedNesting < Test::Unit::TestCase
   include_fixture :TempSvDir
 
   STATUS_BYTES = [0x40000000, 0x6562E70A, 500_000_000,
@@ -393,7 +393,7 @@ class TC_cached_nesting < Test::Unit::TestCase
   end
 end
 
-class TC_cached_log < Test::Unit::TestCase
+class TestCachedLog < Test::Unit::TestCase
   include_fixture :TempSvDir
 
   STATUS_BYTES = [0x40000000, 0x6562E70A, 500_000_000,
@@ -427,7 +427,7 @@ class TC_cached_log < Test::Unit::TestCase
   end
 end
 
-class TC_cached_svok < Test::Unit::TestCase
+class TestCachedSvok < Test::Unit::TestCase
   include_fixture :TempSvDir
 
   STATUS_BYTES = [0x40000000, 0x6562E70A, 500_000_000,
