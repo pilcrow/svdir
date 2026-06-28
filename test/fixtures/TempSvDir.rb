@@ -11,7 +11,17 @@ require 'sys/sv/svdir'
 
 module Fixtures
   module TempSvDir
-    # Test::Unit::TestCase mixin to create one-off service directories
+    # Default 18-byte daemontools status: TAI64 ~2023-11, nano=500ms,
+    # pid=12345, not paused, want='u' (up).  Individual test classes
+    # may define their own STATUS_BYTES to override this default.
+    # TAI64 = unix_epoch + TAI_EPOCH; hi=0x40000000, lo=0x6562E70A
+    STATUS_BYTES = [0x40000000, 0x6562E70A, 500_000_000,
+                    12_345, 0, 'u'].pack('NNNVca').freeze
+
+    # Returns the path to the superivse/status file
+    def status_path
+      File.join(@svdirname, 'supervise', 'status')
+    end
 
     # Make a temp sv-style dir with supervise/ subdir and two FIFOs
     def setup # rubocop:disable Metrics/MethodLength
@@ -34,6 +44,11 @@ module Fixtures
       %w[control ok].each do |fn|
         @fifos[fn.to_sym] = openfifo(File.join(@svdirname, 'supervise', fn))
       end
+
+      # Write a static status file so Cached (and statusbytes) have
+      # something to read.  Override STATUS_BYTES in the test class
+      # or overwrite status_path in setup after super.
+      File.write(status_path, self.class::STATUS_BYTES)
 
       @svdir = Sys::Sv::SvDir.new(@svdirname)
       super
